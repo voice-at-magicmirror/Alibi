@@ -1,7 +1,12 @@
 package app.myzel394.alibi.services
 
+import android.content.Context
+import androidx.datastore.dataStore
+import app.myzel394.alibi.dataStore
 import app.myzel394.alibi.db.AppSettings
 import app.myzel394.alibi.helpers.BatchesFolder
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -44,6 +49,10 @@ abstract class IntervalRecorderService<I, B : BatchesFolder> :
     // Make overrideable
     open fun startNewCycle() {
         counter += 1
+        settings = settings.setBatchStartValue(counter)
+        runBlocking {
+            applicationContext.dataStore.updateData { settings }
+        }
         deleteOldRecordings()
     }
 
@@ -60,6 +69,7 @@ abstract class IntervalRecorderService<I, B : BatchesFolder> :
 
     override fun start() {
         super.start()
+        counter = settings.batchStartValue
 
         batchesFolder.initFolders()
 

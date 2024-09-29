@@ -40,7 +40,13 @@ data class AppSettings(
     val notificationSettings: NotificationSettings? = null,
     val deleteRecordingsImmediately: Boolean = false,
     val saveFolder: String? = null,
+
+    val batchStartValue: Long = 0,
 ) {
+    fun setBatchStartValue(batchStartValue: Long): AppSettings {
+        return copy(batchStartValue = batchStartValue)
+    }
+
     fun setShowAdvancedSettings(showAdvancedSettings: Boolean): AppSettings {
         return copy(showAdvancedSettings = showAdvancedSettings)
     }
